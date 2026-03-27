@@ -21,11 +21,14 @@ function divide(firstNum, secondNum) {
 }
 
 function operate (firstNum, operator, secondNum) {
+    if ((firstNum === undefined || firstNum === "") || (secondNum === undefined || secondNum === "")) {
+        return firstNum ?? secondNum
+    }
+
     let firstNumVar = Number(firstNum)
     let secondNumVar = Number(secondNum)
-    let operatorVar = operator
 
-    switch (operatorVar) {
+    switch (operator) {
         case "+":
             return add(firstNumVar, secondNumVar)
         case "-":
@@ -38,12 +41,38 @@ function operate (firstNum, operator, secondNum) {
 
 }
 
-let numbpad = document.querySelector(".numpad")
-let num = document.querySelector(".num")
-let temp = []
-numbpad.addEventListener("click", (events) => {
-    let target = events.target
-    temp.push(target.textContent)
-    console.log(temp)
+const numbpad = document.querySelector(".numpad")
+const num = document.querySelector(".num")
+
+let prev 
+let current = ""
+let operator
+
+numbpad.addEventListener("click", (event) => {
+    let target = event.target
+    let targetClass = target.classList.value
+
+    if (targetClass == "operator-btn" && (isDefined(prev) && isDefined(current) && isDefined(operator))) {
+        let result = operate(prev, operator, current)
+        current = ""
+        prev = result
+        operator = target.textContent
+    } else if (targetClass == "operator-btn" && isDefined(current)) {
+        operator = target.textContent
+        prev = current
+        current = ""
+    } else if (targetClass == "num-btn" || targetClass == "num-btn zero") {
+        current += target.textContent
+    }
+
+    console.log(`${prev} ${operator} ${current} = ${prev}`)
+    
 })
 
+function isDefined(item) {
+    if (item === undefined || item === "" || item === null) {
+        return false
+    } else {
+        return true
+    }
+}
