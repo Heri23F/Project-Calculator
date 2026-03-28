@@ -62,7 +62,11 @@ numbpad.addEventListener("click", (event) => {
         prev = result
         operator = target.textContent
         infintyHandler(prev)
-    }else if (targetClass == "operator-btn" && isDefined(prev)) {
+    } else if (targetClass == "operator-btn" && !isDefined(current) && target.textContent == "-") {
+        current += target.textContent
+        num.textContent = current
+    }
+    else if (targetClass == "operator-btn" && isDefined(prev)) {
         operator = target.textContent
     }else if (targetClass == "operator-btn" && isDefined(current)) {
         operator = target.textContent
@@ -96,7 +100,7 @@ numbpad.addEventListener("click", (event) => {
 
         current = temp.join("")
         num.textContent = current
-    } else if (targetClass == "num-btn point" && isDefined(current)) {
+    } else if (targetClass == "num-btn point" && isDefined(current) && !current.includes(".")) {
         current += target.textContent
         num.textContent = current
     }
@@ -106,7 +110,7 @@ numbpad.addEventListener("click", (event) => {
 })
 
 function isDefined(item) {
-    if (item === undefined || item === "" || item === null || item === "Error" || item.includes(".")) {
+    if (item === undefined || item === "" || item === null || item === "Error") {
         return false
     } else {
         return true
