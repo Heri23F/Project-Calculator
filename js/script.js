@@ -62,7 +62,10 @@ numbpad.addEventListener("click", (event) => {
         prev = result
         operator = target.textContent
         num.textContent = rounded(prev)
-    } else if (targetClass == "operator-btn" && isDefined(current)) {
+    }else if (targetClass == "operator-btn" && isDefined(prev)) {
+        operator = target.textContent
+        
+    }else if (targetClass == "operator-btn" && isDefined(current)) {
         operator = target.textContent
         prev = current
         current = ""
@@ -73,9 +76,9 @@ numbpad.addEventListener("click", (event) => {
     } else if (targetClass == "operator-btn equal" && defined) {
         let result = operate(prev, operator, current)
         current = ""
-        prev = ""
+        prev = result
         operator = ""
-        num.textContent = rounded(result)
+        num.textContent = rounded(prev)
     } else if (targetClass == "num-btn clear") {
         current = ""
         operator = ""
