@@ -56,18 +56,23 @@ numbpad.addEventListener("click", (event) => {
     let targetClass = target.classList.value
     let defined = isDefined(prev) && isDefined(current) && isDefined(operator)
     
-    if (targetClass == "operator-btn" && defined) {
+    if (targetClass == "operator-btn" && defined && current !== "-") {
         let result = operate(prev, operator, current)
         current = ""
         prev = result
         operator = target.textContent
         infintyHandler(prev)
-    } else if (targetClass == "operator-btn" && !isDefined(current) && target.textContent == "-") {
+    } else if (targetClass == "operator-btn" && !isDefined(current) && isDefined(operator) && target.textContent == "-") {
         current += target.textContent
+        num.textContent = current
+    }else if (targetClass == "operator-btn" && current == "-") {
+        current = ""
+        operator = target.textContent
         num.textContent = current
     }
     else if (targetClass == "operator-btn" && isDefined(prev)) {
         operator = target.textContent
+        num.textContent = current
     }else if (targetClass == "operator-btn" && isDefined(current)) {
         operator = target.textContent
         prev = current
