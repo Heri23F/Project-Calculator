@@ -90,7 +90,7 @@ numbpad.addEventListener("click", (event) => {
     }else if (targetClass == "num-btn") {
         current += target.textContent
         num.textContent = current
-    } else if (targetClass == "operator-btn equal" && defined) {
+    } else if (targetClass == "operator-btn equal" && defined && current !== "-") {
         let result = operate(prev, operator, current)
         current = ""
         prev = result
