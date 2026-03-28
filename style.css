@@ -84,7 +84,7 @@ button:hover {
 }
 
 .num {
-    font-size: 36px;
+    font-size: 24px;
 }
 
 button {
@@ -93,4 +93,8 @@ button {
 
 .equal {
     background-color: rgb(73,161,9);
+}
+
+.num-prev {
+    align-self: flex-start;
 }

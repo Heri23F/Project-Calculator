@@ -46,6 +46,7 @@ function operate (firstNum, operator, secondNum) {
 const numbpad = document.querySelector(".numpad")
 const num = document.querySelector(".num")
 
+
 let prev 
 let current = ""
 let operator
@@ -60,7 +61,7 @@ numbpad.addEventListener("click", (event) => {
         current = ""
         prev = result
         operator = target.textContent
-        num.textContent = prev
+        num.textContent = rounded(prev)
     } else if (targetClass == "operator-btn" && isDefined(current)) {
         operator = target.textContent
         prev = current
@@ -74,7 +75,7 @@ numbpad.addEventListener("click", (event) => {
         current = ""
         prev = ""
         operator = ""
-        num.textContent = result
+        num.textContent = rounded(result)
     } else if (targetClass == "num-btn clear") {
         current = ""
         operator = ""
@@ -109,4 +110,8 @@ function infintyHandler(value) {
     } else {
         return value
     }
+}
+
+function rounded(num) {
+    return Math.round((num + Number.EPSILON) * 1000) / 1000
 }
