@@ -106,7 +106,7 @@ numbpad.addEventListener("click", (event) => {
 })
 
 function isDefined(item) {
-    if (item === undefined || item === "" || item === null || item === "Error") {
+    if (item === undefined || item === "" || item === null || item === "Error" || item.includes(".")) {
         return false
     } else {
         return true
