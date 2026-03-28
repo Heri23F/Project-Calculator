@@ -62,10 +62,15 @@ numbpad.addEventListener("click", (event) => {
         prev = result
         operator = target.textContent
         infintyHandler(prev)
-    } else if (targetClass == "operator-btn" && !isDefined(current) && isDefined(operator) && target.textContent == "-") {
+    }else if (targetClass == "operator-btn" && isDefined(prev) && !isDefined(operator) && target.textContent == "-") {
+        current = ""
+        operator = target.textContent
+        num.textContent = current
+    }
+     else if (targetClass == "operator-btn" && !isDefined(current) && target.textContent == "-") {
         current += target.textContent
         num.textContent = current
-    }else if (targetClass == "operator-btn" && current == "-") {
+    } else if (targetClass == "operator-btn" && current == "-") {
         current = ""
         operator = target.textContent
         num.textContent = current
@@ -136,3 +141,4 @@ function infintyHandler(value) {
 function rounded(num) {
     return Math.round((num + Number.EPSILON) * 1000) / 1000
 }
+
