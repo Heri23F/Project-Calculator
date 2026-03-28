@@ -115,7 +115,7 @@ function isDefined(item) {
 
 function infintyHandler(value) {
     if (value == Infinity) {
-        num.textContent = "Error It Infinty"
+        num.textContent = "Error"
         prev = ""
         operator = ""
 
