@@ -31,13 +31,13 @@ function operate (firstNum, operator, secondNum) {
 
     switch (operator) {
         case "+":
-            return infintyHandler(add(firstNumVar, secondNumVar))
+            return (add(firstNumVar, secondNumVar))
         case "-":
-            return infintyHandler(subtract(firstNumVar, secondNumVar))
+            return (subtract(firstNumVar, secondNumVar))
         case "x":
-            return infintyHandler(multiply(firstNumVar, secondNumVar))
+            return (multiply(firstNumVar, secondNumVar))
         case "/":
-            return infintyHandler(divide(firstNumVar, secondNumVar))
+            return (divide(firstNumVar, secondNumVar))
     }
 
   
@@ -61,7 +61,7 @@ numbpad.addEventListener("click", (event) => {
         current = ""
         prev = result
         operator = target.textContent
-        num.textContent = rounded(prev)
+        infintyHandler(prev)
     }else if (targetClass == "operator-btn" && isDefined(prev)) {
         operator = target.textContent
     }else if (targetClass == "operator-btn" && isDefined(current)) {
@@ -77,7 +77,7 @@ numbpad.addEventListener("click", (event) => {
         current = ""
         prev = result
         operator = ""
-        num.textContent = rounded(prev)
+        infintyHandler(prev)
     } else if (targetClass == "num-btn clear") {
         current = ""
         operator = ""
@@ -111,9 +111,12 @@ function isDefined(item) {
 
 function infintyHandler(value) {
     if (value == Infinity) {
-        return "Error"
+        num.textContent = "Error"
+        prev = ""
+        operator = ""
+
     } else {
-        return value
+        num.textContent = rounded(value)
     }
 }
 
