@@ -53,8 +53,9 @@ let operator
 numbpad.addEventListener("click", (event) => {
     let target = event.target
     let targetClass = target.classList.value
-
-    if (targetClass == "operator-btn" && (isDefined(prev) && isDefined(current) && isDefined(operator))) {
+    let defined = isDefined(prev) && isDefined(current) && isDefined(operator)
+    
+    if (targetClass == "operator-btn" && defined) {
         let result = operate(prev, operator, current)
         current = ""
         prev = result
@@ -68,18 +69,18 @@ numbpad.addEventListener("click", (event) => {
     } else if (targetClass == "num-btn" || targetClass == "num-btn zero") {
         current += target.textContent
         num.textContent = current
-    } else if (targetClass == "operator-btn equal" && (isDefined(prev) && isDefined(current) && isDefined(operator))) {
+    } else if (targetClass == "operator-btn equal" && defined) {
         let result = operate(prev, operator, current)
-        current = result
+        current = ""
         prev = ""
         operator = ""
-        num.textContent = current
+        num.textContent = result
     } else if (targetClass == "num-btn clear") {
         current = ""
         operator = ""
         prev = ""
         num.textContent = current
-    } else if (targetClass == "operator-btn back" && isDefined(current)) {
+    } else if (targetClass == "operator-btn back" && current !== undefined) {
         if (current == "Error") {
             current = ""
         }
@@ -95,7 +96,7 @@ numbpad.addEventListener("click", (event) => {
 })
 
 function isDefined(item) {
-    if (item === undefined || item === "" || item === null) {
+    if (item === undefined || item === "" || item === null || item === "Error") {
         return false
     } else {
         return true
