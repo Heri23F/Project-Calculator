@@ -31,20 +31,16 @@ function operate (firstNum, operator, secondNum) {
 
     switch (operator) {
         case "+":
-            result = add(firstNumVar, secondNumVar)
+            return infintyHandler(add(firstNumVar, secondNumVar))
         case "-":
-            result = subtract(firstNumVar, secondNumVar)
+            return infintyHandler(subtract(firstNumVar, secondNumVar))
         case "x":
-            result = multiply(firstNumVar, secondNumVar)
+            return infintyHandler(multiply(firstNumVar, secondNumVar))
         case "/":
-            result = divide(firstNumVar, secondNumVar)
+            return infintyHandler(divide(firstNumVar, secondNumVar))
     }
 
-    if (result == Infinity) {
-        return "Error"
-    } else {
-        return result
-    }
+  
 }
 
 const numbpad = document.querySelector(".numpad")
@@ -106,3 +102,10 @@ function isDefined(item) {
     }
 }
 
+function infintyHandler(value) {
+    if (value == Infinity) {
+        return "Error"
+    } else {
+        return value
+    }
+}
