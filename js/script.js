@@ -90,6 +90,9 @@ numbpad.addEventListener("click", (event) => {
 
         current = temp.join("")
         num.textContent = current
+    } else if (targetClass == "num-btn point" && isDefined(current)) {
+        current += target.textContent
+        num.textContent = current
     }
     
     console.log(`${prev} ${operator} ${current} = ${prev}`)

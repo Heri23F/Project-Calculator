@@ -24,12 +24,7 @@ body {
 
 .num-btn {
     width: 32%;
-    aspect-ratio: 1;
-}
-
-.num-btn.zero {
-    width: 69%;
-    aspect-ratio: 5 / 1;
+    aspect-ratio: 2 / 1;
 }
 
 .operator {
@@ -76,8 +71,6 @@ button:hover {
 }
 
 .clear {
-    width: 28%;
-    aspect-ratio: 5 / 1;
     background-color: rgb(221,45,0);
     color: white;
     
@@ -98,3 +91,14 @@ button {
 .num-prev {
     align-self: flex-start;
 }
+
+.bottom-button {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.point {
+    font-size: 24px;
+}
+
