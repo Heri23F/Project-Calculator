@@ -57,14 +57,34 @@ numbpad.addEventListener("click", (event) => {
         current = ""
         prev = result
         operator = target.textContent
+        num.textContent = prev
     } else if (targetClass == "operator-btn" && isDefined(current)) {
         operator = target.textContent
         prev = current
         current = ""
+        num.textContent = current
     } else if (targetClass == "num-btn" || targetClass == "num-btn zero") {
         current += target.textContent
-    }
+        num.textContent = current
+    } else if (targetClass == "operator-btn equal" && (isDefined(prev) && isDefined(current) && isDefined(operator))) {
+        let result = operate(prev, operator, current)
+        current = result
+        prev = ""
+        operator = ""
+        num.textContent = current
+    } else if (targetClass == "num-btn clear") {
+        current = ""
+        operator = ""
+        prev = ""
+        num.textContent = current
+    } else if (targetClass == "operator-btn back" && isDefined(current)) {
+        let temp = current.toString().split("")
+        let remTemp = temp.pop()
 
+        current = temp.join("")
+        num.textContent = current
+    }
+    
     console.log(`${prev} ${operator} ${current} = ${prev}`)
     
 })
