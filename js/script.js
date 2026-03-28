@@ -27,18 +27,24 @@ function operate (firstNum, operator, secondNum) {
 
     let firstNumVar = Number(firstNum)
     let secondNumVar = Number(secondNum)
+    let result
 
     switch (operator) {
         case "+":
-            return add(firstNumVar, secondNumVar)
+            result = add(firstNumVar, secondNumVar)
         case "-":
-            return subtract(firstNumVar, secondNumVar)
+            result = subtract(firstNumVar, secondNumVar)
         case "x":
-            return multiply(firstNumVar, secondNumVar)
+            result = multiply(firstNumVar, secondNumVar)
         case "/":
-            return divide(firstNumVar, secondNumVar)
+            result = divide(firstNumVar, secondNumVar)
     }
 
+    if (result == Infinity) {
+        return "Error"
+    } else {
+        return result
+    }
 }
 
 const numbpad = document.querySelector(".numpad")
@@ -78,6 +84,9 @@ numbpad.addEventListener("click", (event) => {
         prev = ""
         num.textContent = current
     } else if (targetClass == "operator-btn back" && isDefined(current)) {
+        if (current == "Error") {
+            current = ""
+        }
         let temp = current.toString().split("")
         let remTemp = temp.pop()
 
@@ -96,3 +105,4 @@ function isDefined(item) {
         return true
     }
 }
+
