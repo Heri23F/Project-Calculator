@@ -69,7 +69,11 @@ numbpad.addEventListener("click", (event) => {
         prev = current
         current = ""
         num.textContent = current
-    } else if (targetClass == "num-btn" || targetClass == "num-btn zero") {
+    } else if (targetClass == "num-btn" && isDefined(prev) && !isDefined(operator)) {
+        prev = ""
+        current += target.textContent
+        num.textContent = current
+    }else if (targetClass == "num-btn") {
         current += target.textContent
         num.textContent = current
     } else if (targetClass == "operator-btn equal" && defined) {
@@ -97,7 +101,7 @@ numbpad.addEventListener("click", (event) => {
         num.textContent = current
     }
     
-    
+    console.log(`${prev} ${operator} ${current} = ${prev}`)
     
 })
 
