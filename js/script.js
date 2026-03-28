@@ -97,7 +97,7 @@ numbpad.addEventListener("click", (event) => {
         num.textContent = current
     }
     
-    console.log(`${prev} ${operator} ${current} = ${prev}`)
+    
     
 })
 
