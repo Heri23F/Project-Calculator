@@ -25,6 +25,8 @@ function operate (obj) {
     let secondNumVar = Number(obj.input)
     let result 
 
+    objMath.state = "result"
+
     switch (obj.operator) {
         case "+":
             result = (add(firstNumVar, secondNumVar))
@@ -61,7 +63,7 @@ let objMath = {
 }
 
 function isEmpty(item) {
-    if (item === undefined || item === null) return true
+    if (item === undefined || item === null || item === "") return true
     return false
 }
 
@@ -76,7 +78,7 @@ function getFirstInput(button, value, obj) {
     if (button === "operator-btn" && obj.input === "-" && value === "-") return obj.input = null
 
     // Handle second input after user press operator button
-    if (button === "operator-btn" && isEmpty(obj.current)) {
+    if (button === "operator-btn" && isEmpty(obj.current) && !isEmpty(obj.input)) {
         obj.current = obj.input
         obj.input = null
         obj.operator = value
@@ -141,8 +143,8 @@ numbpad.addEventListener("click", (event) => {
     specialInput(button)
 
     if (objMath.state === "firstInput") {
-        getFirstInput(button, value, objMath)
-        console.log(objMath)
+        getFirstInput(button, value, objMath);
+        console.log(objMath);
     }
 
     if (objMath.state === "secondInput") {
@@ -150,10 +152,9 @@ numbpad.addEventListener("click", (event) => {
         console.log(objMath)
     }
 
-    if (objMath.state === "operate") {
-        operate(objMath)
-        
-    }
+    if (objMath.state === "operate") operate(objMath)
+    if (objMath.state === "result") result(button, value, objMath)
+    
 
     return update(objMath.state)
 
@@ -165,13 +166,13 @@ function rounded(num) {
 
 function update(state) {
     if (state === "firstInput") return num.textContent = objMath.input
-    if (state === "secondInput") return num.textContent = `${objMath.current} ${objMath.operator} ${objMath.input ?? ""}`
-    if (state == "operate" && objMath.result === Infinity) return num.textContent = "Error"
-    if (state == "operate") {
-        num.textContent = objMath.result
-        updateVal(objMath)
-        return
+    if (state === "secondInput") return num.textContent = `${rounded(Number(objMath.current))} ${objMath.operator} ${objMath.input ?? ""}`
+    if (state === "result" && objMath.current === Infinity) {
+        clr(objMath)
+        return num.textContent = "Error"
     }
+    if (state === "result") return num.textContent = rounded(Number(objMath.result))
+   
     
 }
 
@@ -179,20 +180,66 @@ function specialInput(button) {
     let readyToOperate = !isEmpty(objMath.current) && !isEmpty(objMath.input) && !isEmpty(objMath.operator)
     // Handle clear button
     if (button === "num-btn clear") {
-        objMath.current = null
-        objMath.input = null
-        objMath.operator = null
-        delete objMath.result
-        delete objMath.tempOperator
-        objMath.state = "firstInput"
+        clr(objMath)
     }
 
     // Handle equal button
-    if (button === "operator-btn equal" && readyToOperate) return obj.state = "operate"
+    if (button === "operator-btn equal" && readyToOperate) return objMath.state = "operate"
 
     // Handle backspace button
-    // if (button === "operator-btn back" && !isEmpty(objMath.input)) 
+    if (button === "operator-btn back" && !isEmpty(objMath.input)) {
+        objMath.input = objMath.input.slice(0, -1)
+        console.log(objMath.input)
+        return
+    }
+
+    if (button === "operator-btn back" && isEmpty(objMath.input) && !isEmpty(objMath.operator)) {
+        objMath.operator = objMath.operator.slice(0, -1)
+        objMath.input = objMath.current
+        objMath.current = null
+        objMath.state = "firstInput"
+    }
 
 
+}
+
+function result(button, value, obj) {
+    if (!isEmpty(obj.tempOperator)) {
+        obj.current = obj.result
+        obj.operator = obj.tempOperator
+        obj.input = null
+        delete obj.result
+        delete obj.tempOperator
+        obj.state = "secondInput"
+        return
+        
+    }
+
+    if (button == "operator-btn") {
+        obj.current = obj.result
+        obj.operator = value
+         obj.input = null
+        delete obj.result
+        delete obj.tempOperator
+        obj.state = "secondInput"
+        return
+    }
+
+    if (button == "num-btn") {
+        clr(obj)
+        obj.input = value
+        obj.state = "firstInput"
+        return
+    }
+    
+}
+
+function clr(obj) {
+    obj.current = null
+    obj.input = null
+    obj.operator = null
+    delete obj.result
+    delete obj.tempOperator
+    obj.state = "firstInput"
 }
 
