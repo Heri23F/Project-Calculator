@@ -20,24 +20,31 @@ function divide(firstNum, secondNum) {
     return firstNum / secondNum
 }
 
-function operate (firstNum, operator, secondNum) {
-    if ((firstNum === undefined || firstNum === "") || (secondNum === undefined || secondNum === "")) {
-        return firstNum ?? secondNum
-    }
+function operate (obj) { 
+    let firstNumVar = Number(obj.current)
+    let secondNumVar = Number(obj.input)
+    let result 
 
-    let firstNumVar = Number(firstNum)
-    let secondNumVar = Number(secondNum)
-    let result
-
-    switch (operator) {
+    switch (obj.operator) {
         case "+":
-            return (add(firstNumVar, secondNumVar))
+            result = (add(firstNumVar, secondNumVar))
+            obj.result = result
+            return
+            
         case "-":
-            return (subtract(firstNumVar, secondNumVar))
+            result = (subtract(firstNumVar, secondNumVar))
+            obj.result = result
+            return
         case "x":
-            return (multiply(firstNumVar, secondNumVar))
+            result = (multiply(firstNumVar, secondNumVar))
+            obj.result = result
+            return
+            
         case "/":
-            return (divide(firstNumVar, secondNumVar))
+            result = (divide(firstNumVar, secondNumVar))
+            obj.result = result
+            return
+            
     }
 
   
@@ -46,99 +53,146 @@ function operate (firstNum, operator, secondNum) {
 const numbpad = document.querySelector(".numpad")
 const num = document.querySelector(".num")
 
+let objMath = {
+    current: null,
+    input: null,
+    operator: null,
+    state: "firstInput",
+}
 
-let prev 
-let current = ""
-let operator
+function isEmpty(item) {
+    if (item === undefined || item === null) return true
+    return false
+}
+
+function getFirstInput(button, value, obj) {
+
+    // Handle Number Input
+    if (button === "num-btn" && isEmpty(obj.input)) return obj.input = value
+    if (button === "num-btn") return obj.input += value
+
+    // Handle minus input
+    if (button === "operator-btn" && isEmpty(obj.input) && value === "-") return obj.input = value
+    if (button === "operator-btn" && obj.input === "-" && value === "-") return obj.input = null
+
+    // Handle second input after user press operator button
+    if (button === "operator-btn" && isEmpty(obj.current)) {
+        obj.current = obj.input
+        obj.input = null
+        obj.operator = value
+        obj.state = "secondInput"
+        return
+    }
+
+}
+
+function getSecondInput (button, value, obj) {
+
+    // handle operator change
+    if (button === "operator-btn" && !isEmpty(obj.operator) && isEmpty(obj.input)) return obj.operator = value
+
+    // Handle Number Input
+    if (button === "num-btn" && isEmpty(obj.input)) return obj.input = value
+    if (button === "num-btn") return obj.input += value
+
+    // Handle minus input
+    if (button === "operator-btn" && isEmpty(obj.input) && value === "-") return obj.input = value
+
+    // Handle Last input after user press operator button
+    if (button === "operator-btn" && !isEmpty(obj.current) && !isEmpty(obj.operator) && !isEmpty(obj.input)) {
+        obj.tempOperator = value
+        obj.state = "operate"
+        return
+    }
+    
+}
+
+function updateVal(obj) {
+
+    if (!isEmpty(obj.tempOperator)) {
+        obj.current = obj.result
+        obj.operator = obj.tempOperator
+        obj.input = null
+        delete obj.tempOperator
+        delete obj.result
+        obj.state = "secondInput"
+        return
+    }
+
+    if (isEmpty(obj.tempOperator)) {
+        obj.current = null
+        obj.operator = null
+        obj.input = null
+        delete obj.tempOperator
+        delete obj.result
+        obj.state = "firstInput"
+        return
+    }
+}
+
+
+
 
 numbpad.addEventListener("click", (event) => {
     let target = event.target
-    let targetClass = target.classList.value
-    let defined = isDefined(prev) && isDefined(current) && isDefined(operator)
-    
-    if (targetClass == "operator-btn" && defined && current !== "-") {
-        let result = operate(prev, operator, current)
-        current = ""
-        prev = result
-        operator = target.textContent
-        infintyHandler(prev)
-    }else if (targetClass == "operator-btn" && isDefined(prev) && !isDefined(operator) && target.textContent == "-") {
-        current = ""
-        operator = target.textContent
-        num.textContent = current
-    }
-     else if (targetClass == "operator-btn" && !isDefined(current) && target.textContent == "-") {
-        current += target.textContent
-        num.textContent = current
-    } else if (targetClass == "operator-btn" && current == "-") {
-        current = ""
-        operator = target.textContent
-        num.textContent = current
-    }
-    else if (targetClass == "operator-btn" && isDefined(prev)) {
-        operator = target.textContent
-        num.textContent = current
-    }else if (targetClass == "operator-btn" && isDefined(current)) {
-        operator = target.textContent
-        prev = current
-        current = ""
-        num.textContent = current
-    } else if (targetClass == "num-btn" && isDefined(prev) && !isDefined(operator)) {
-        prev = ""
-        current += target.textContent
-        num.textContent = current
-    }else if (targetClass == "num-btn") {
-        current += target.textContent
-        num.textContent = current
-    } else if (targetClass == "operator-btn equal" && defined && current !== "-") {
-        let result = operate(prev, operator, current)
-        current = ""
-        prev = result
-        operator = ""
-        infintyHandler(prev)
-    } else if (targetClass == "num-btn clear") {
-        current = ""
-        operator = ""
-        prev = ""
-        num.textContent = current
-    } else if (targetClass == "operator-btn back" && current !== undefined) {
-        if (current == "Error") {
-            current = ""
-        }
-        let temp = current.toString().split("")
-        let remTemp = temp.pop()
+    let button = target.classList.value
+    let value = target.textContent
 
-        current = temp.join("")
-        num.textContent = current
-    } else if (targetClass == "num-btn point" && isDefined(current) && !current.includes(".")) {
-        current += target.textContent
-        num.textContent = current
+    specialInput(button)
+
+    if (objMath.state === "firstInput") {
+        getFirstInput(button, value, objMath)
+        console.log(objMath)
     }
-    
-   
-    
+
+    if (objMath.state === "secondInput") {
+        getSecondInput(button, value, objMath)
+        console.log(objMath)
+    }
+
+    if (objMath.state === "operate") {
+        operate(objMath)
+        
+    }
+
+    return update(objMath.state)
+
 })
-
-function isDefined(item) {
-    if (item === undefined || item === "" || item === null || item === "Error") {
-        return false
-    } else {
-        return true
-    }
-}
-
-function infintyHandler(value) {
-    if (value == Infinity) {
-        num.textContent = "Error"
-        prev = ""
-        operator = ""
-
-    } else {
-        num.textContent = rounded(value)
-    }
-}
 
 function rounded(num) {
     return Math.round((num + Number.EPSILON) * 1000) / 1000
+}
+
+function update(state) {
+    if (state === "firstInput") return num.textContent = objMath.input
+    if (state === "secondInput") return num.textContent = `${objMath.current} ${objMath.operator} ${objMath.input ?? ""}`
+    if (state == "operate" && objMath.result === Infinity) return num.textContent = "Error"
+    if (state == "operate") {
+        num.textContent = objMath.result
+        updateVal(objMath)
+        return
+    }
+    
+}
+
+function specialInput(button) {
+    let readyToOperate = !isEmpty(objMath.current) && !isEmpty(objMath.input) && !isEmpty(objMath.operator)
+    // Handle clear button
+    if (button === "num-btn clear") {
+        objMath.current = null
+        objMath.input = null
+        objMath.operator = null
+        delete objMath.result
+        delete objMath.tempOperator
+        objMath.state = "firstInput"
+    }
+
+    // Handle equal button
+    if (button === "operator-btn equal" && readyToOperate) return obj.state = "operate"
+
+    // Handle backspace button
+    // if (button === "operator-btn back" && !isEmpty(objMath.input)) 
+
+
 }
 
