@@ -1,5 +1,4 @@
-// Function for basic math
-
+// basic math function
 // add
 function add(firstNum, secondNum) {
     return firstNum + secondNum
